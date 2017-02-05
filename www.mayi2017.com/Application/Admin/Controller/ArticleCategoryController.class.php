@@ -9,15 +9,14 @@
 namespace Admin\Controller;
 use Think\Controller;
 
-class SupplierController extends Controller
+class ArticleCategoryController extends Controller
 {
     /**
-     * @var \Admin\Model\SupplierModel
+     * @var \Admin\Model\ArticleCategoryModel
      */
-    //构造模型对象
     private $_model=null;
     protected  function _initialize(){
-        $this ->_model =  D('Supplier');
+        $this ->_model =  D('ArticleCategory');
     }
     /**
      * 列表页面

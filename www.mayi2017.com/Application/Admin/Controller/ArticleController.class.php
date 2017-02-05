@@ -9,15 +9,14 @@
 namespace Admin\Controller;
 use Think\Controller;
 
-class SupplierController extends Controller
+class ArticleController extends Controller
 {
     /**
-     * @var \Admin\Model\SupplierModel
+     * @var \Admin\Model\ArticleModel
      */
-    //构造模型对象
     private $_model=null;
     protected  function _initialize(){
-        $this ->_model =  D('Supplier');
+        $this ->_model =  D('Article');
     }
     /**
      * 列表页面
@@ -32,7 +31,9 @@ class SupplierController extends Controller
 
         //查询数据
         $date =$this->_model->getPageResult($cond);
-
+        $article_category_model = D('ArticleCategory');
+        $categorys = $article_category_model->getList();
+        $this->assign('categorys',$categorys);
         $this->assign($date);
         //调用视图
         $this->display();
@@ -51,13 +52,16 @@ class SupplierController extends Controller
                 $this->error(get_error($this->_model));
             };
             //保存数据
-            if($this->_model->add() === false){
+            if($this->_model->addArticle() === false){
                 $this->error(get_error($this->_model));
             }else{
                 //提示跳转
                 $this->success('添加成功',U('index'));
             }
         }else{
+            $article_category_model = D('ArticleCategory');
+            $categorys = $article_category_model->getList();
+            $this->assign('categorys',$categorys);
             $this->display();
         }
     }
@@ -68,14 +72,18 @@ class SupplierController extends Controller
                 if($this->_model->create()===false){
                     $this->error(get_error($this->_model));
                 }
-                if($this->_model->save()===false){
+                if($this->_model->saveArticle()===false){
                     $this->error(get_error($this->_model));
                 }
                 $this->success('修改成功',U('index'));
             }else{
-                $rows =$this->_model->find($id);
+                $rows =$this->_model->getArticleInfo($id);
+                $article_category_model = D('ArticleCategory');
+                $categorys = $article_category_model->getList();
+                $this->assign('categorys',$categorys);
                 $this->assign('rows',$rows);
-                $this->display();
+                $this->display('add');
+
 
             }
 
@@ -83,38 +91,13 @@ class SupplierController extends Controller
     //逻辑删除
     public function remove($id){
 
-        if($this->_model->setField(['id'=>$id,'status'=>-1,'name'=>['exp','concat(name,"_del")']])===false){
+        if($this->_model->deleteArticle($id)===false){
             $this->error(get_error($this->_model));
         }else{
             $this->success('删除成功',U('index'));
         }
     }
-    //回收站
-    public function rubbish(){
-        //搜索
-        $name = I('get.name');
-        $cond['status'] = [-1];
-        if($name){
-            $cond['name']=['like','%'.$name.'%'];
-        }
-        //查询数据
-        $date =$this->_model->getPageResult($cond);
 
-        $this->assign($date);
-        //调用视图
-        $this->display();
-
-
-    }
-    //物理删除
-    public function del($id){
-
-        if($this->_model->delete($id)===false){
-            $this->error(get_error($this->_model));
-        }else{
-            $this->success('删除成功',U('rubbish'));
-        }
-    }
 
 
 }

@@ -3,6 +3,6 @@ namespace Admin\Controller;
 use Think\Controller;
 class IndexController extends Controller {
     public function index(){
-        echo '11111111111';
+        echo '1111111111111111111111111111111111';
     }
 }

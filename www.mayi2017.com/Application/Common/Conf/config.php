@@ -1,5 +1,5 @@
 <?php
-define('BASE_URL','http://www.mayi2017.com');
+define('BASE_URL','http://www.mayi2017Admin.com');
 
 return array(
 

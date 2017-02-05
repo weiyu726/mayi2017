@@ -8,7 +8,7 @@
 
 namespace Admin\Model;
 use Think\Model;
-class SupplierModel extends Model
+class ArticleCategoryModel extends Model
 {
     protected $patchValidate = true; //开启批量验证
     /**
@@ -17,9 +17,9 @@ class SupplierModel extends Model
      * sort   必须为数字
      * @var
      */
-    protected $_validate = [
-        ['name','require','供货商名称不能为空'],
-        ['name','','供货商已存在',self::EXISTS_VALIDATE,'unique'],
+    protected $validate = [
+        ['name','require','分类名称不能为空'],
+        ['name','','分类已存在',self::EXISTS_VALIDATE,'unique'],
         ['status','0,1','供货商状态不合法',self::EXISTS_VALIDATE,'in'],
         ['sort','number','排序必须为数字'],
     ];
@@ -42,5 +42,13 @@ class SupplierModel extends Model
             'page_html'=>$page_html,
         ];
 
+    }
+
+    /**
+     * 获取所有文章分类
+     * @return array
+     */
+    public function getList(){
+        return $this->where(['status'=>['egt',0]])->getField('id,id,name');
     }
 }
