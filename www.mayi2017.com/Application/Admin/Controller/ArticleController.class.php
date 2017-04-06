@@ -23,6 +23,7 @@ class ArticleController extends Controller
      */
     public function index(){
         //搜索
+
         $name = I('get.name');
         $cond['status'] = ['egt',0];
         if($name){

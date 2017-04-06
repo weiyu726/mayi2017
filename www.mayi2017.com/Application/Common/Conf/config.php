@@ -10,6 +10,11 @@ return array(
         '__CSS__'  => BASE_URL.'/Public/Admin/css',
         '__JS__'  => BASE_URL.'/Public/Admin/js',
         '__IMG__'  => BASE_URL.'/Public/Admin/img',
+        '__UPLOADIFY__'  => BASE_URL.'/Public/Admin/etc/uploadify',
+        '__LAYER__'  => BASE_URL.'/Public/Admin/etc/layer',
+        '__ZTREE__'  => BASE_URL.'/Public/Admin/etc/ztree',
+        '__TREEGRID__'  => BASE_URL.'/Public/Admin/etc/treegrid',
+        '__UEDITOR__'  => BASE_URL.'/Public/Admin/etc/ueditor',
     ],
     /* 数据库设置 */
     'DB_TYPE'               =>  'mysql',     // 数据库类型
@@ -33,4 +38,24 @@ return array(
         'PAGE_SIZE' =>  20 ,
         'PAGE_THEME'=>  '%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%',
     ],
+
+    'UPLOAD_SETTING' => require 'upload.php',
+
+    //RBAC访问忽略列表
+    'ACCESS_STTING' =>[//所有用户可见
+        'IGNORE'=>[
+            'Admin/Admin/login',
+            'Admin/Captcha/captcha'
+        ],
+        'USER_IGNOER'=>[//登录用户可见
+            'Admin/Index/top',
+            'Admin/Index/index',
+            'Admin/Index/menu',
+            'Admin/Index/main',
+            'Admin/Admin/loginOut',
+            'Admin/Admin/changePassword',
+        ]
+    ],
+
+    'COOKIE_PREFIX'=>'admin_shop_com',
 );

@@ -21,6 +21,7 @@ class ArticleCategoryController extends Controller
     /**
      * 列表页面
      */
+
     public function index(){
         //搜索
         $name = I('get.name');

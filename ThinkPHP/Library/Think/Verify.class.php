@@ -89,9 +89,11 @@ class Verify {
         if(empty($code) || empty($secode)) {
             return false;
         }
+
         // session 过期
         if(NOW_TIME - $secode['verify_time'] > $this->expire) {
             session($key, null);
+
             return false;
         }
 
@@ -288,6 +290,7 @@ class Verify {
         $key = substr(md5($this->seKey), 5, 8);
         $str = substr(md5($str), 8, 10);
         return md5($key . $str);
+
     }
 
 }

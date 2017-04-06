@@ -3,6 +3,17 @@ namespace Admin\Controller;
 use Think\Controller;
 class IndexController extends Controller {
     public function index(){
-        echo '1111111111111111111111111111111111';
+       $this->display();
+    }
+    public function top(){
+        $userinfo = session('USERINFO');
+        $this->assign('userinfo',$userinfo);
+        $this->display();
+    }
+    public function menu(){
+        $this->display();
+    }
+    public function main(){
+        $this->display();
     }
 }

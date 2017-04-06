@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="__CSS__/general.css" rel="stylesheet" type="text/css" />
 <link href="__CSS__/main.css" rel="stylesheet" type="text/css" />
+<link href="__UPLOADIFY__/uploadify.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <h1>
@@ -23,6 +24,13 @@
                 <td>
                     <input type="text" name="name" maxlength="60" value="" />
                     <span class="require-field">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">LOGO</td>
+                <td>
+                   <input type="file" name="logo" id="logo_file"/>
+                    <img src="" id="logo_preview" width="200" />
                 </td>
             </tr>
             <tr>
@@ -55,7 +63,36 @@
 </div>
 
 <div id="footer">
-共执行 1 个查询，用时 0.018952 秒，Gzip 已禁用，内存占用 2.197 MB<br />
-版权所有 &copy; 2005-2012 上海商派网络科技有限公司，并保留所有权利。</div>
+<br />
+版权所有 &copy; 2005-2012 蚂蚁网络科技有限公司，并保留所有权利。
+</div>
+<js href="__JS__/jquery.min.js" />
+<js href="__UPLOADIFY__/jquery.uploadify.min.js "/>
+<js href="__LAYER__/layer.js "/>
+<script type='text/javascript'>
+    $(function(){
+        //使用UPLOADIFY文件框
+        $options = {
+            swf :'__UPLOADIFY__/uploadify.swf',
+            uploader:'{:U("Upload/uploadImg")}',
+            buttonText:'上传图片',
+            fileObjName:'file_data',  onUploadSuccess:function(file_item,response){
+                //根据返回的status来判定是否成功
+                var data = $.parseJSON(response);
+                if(data.status){
+                    $('#logo').val(data.file_url);
+                    $('#logo_preview').attr('src',data.file_url);
+                    layer.alert(data.msg, {icon: 6});
+                }else{
+//                        alert(data.msg);
+                    layer.alert(data.msg, {icon: 5});
+                }
+            },
+        };
+        $('#logo_file').uploadify($options);
+
+    });
+
+</script>
 </body>
 </html>

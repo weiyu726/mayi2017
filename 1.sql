@@ -1,0 +1,1 @@
+INSERT INTO `goods` (`name`,`sn`,`goods_category_id`,`is_on_sale`,`sort`,`inputtime`) VALUES ('啊','SN2017020700009','4','1','50','1486407997')
