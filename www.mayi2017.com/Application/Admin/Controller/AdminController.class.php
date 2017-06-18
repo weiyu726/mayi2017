@@ -16,7 +16,6 @@ class AdminController extends Controller
 
 
     public function index() {
-        var_dump('__IMG__');
         //获取管理员列表
         $name = I('get.name');
         $cond = [];
@@ -28,7 +27,7 @@ class AdminController extends Controller
     }
     public function add(){
         if(IS_POST){
-            if($this->_model->create() === false){
+            if($this->_model->create('','register') === false){
                $this->error(get_error($this->_model));
             }
             if($this->_model->addAdmin() === false){
@@ -55,7 +54,6 @@ class AdminController extends Controller
             //获取管理员信息,包括角色
             $row = $this->_model->getAdminInfo($id);
             $this->assign('row',$row);
-            dump($row);
             $this->_before_view();
             $this->display('add');
         }
@@ -100,5 +98,23 @@ class AdminController extends Controller
         session(null);
         cookie(null);
         $this->success('退出成功',U('Admin/login'));
+    }
+
+    /**
+     * 修改密码
+     */
+    public function changePassword()
+    {
+        if(IS_POST){
+            if($this->_model->create('','register') === false){
+                $this->error(get_error($this->_model));
+            }
+            if($this->_model->upPassword() === false){
+                $this->error(get_error($this->_model));
+            }
+            $this->success('密码修改成功',U('Index/main'));
+        }else{
+            $this->display('');
+        }
     }
 }

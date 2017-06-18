@@ -1,0 +1,231 @@
+<extend name="Layout:member_base"/>
+<block name="css">
+    <style type="text/css">
+        .error{
+            padding-left: 1em;
+            color:red;
+        }
+    </style>
+</block>
+<block name="content">
+    <!-- 登录主体部分start -->
+    <div class="login w990 bc mt10 regist">
+        <div class="login_hd">
+            <h2>用户注册</h2>
+            <b></b>
+        </div>
+        <div class="login_bd">
+            <div class="login_form fl">
+                <form action="{:U()}" method="post" id='reg-form'>
+                    <ul>
+                        <li>
+                            <label for="">用户名：</label>
+                            <input type="text" class="txt" name="username" /><span class="error"></span>
+                            <p>3-20位字符，可由中文、字母、数字和下划线组成</p>
+                        </li>
+                        <li>
+                            <label for="">密码：</label>
+                            <input type="password" class="txt" name="password" id='password'/><span class="error"></span>
+                            <p>6-16位字符，可使用字母、数字和符号的组合，不建议使用纯数字、纯字母、纯符号</p>
+                        </li>
+                        <li>
+                            <label for="">确认密码：</label>
+                            <input type="password" class="txt" name="repassword" /><span class="error"></span>
+                            <p> <span>请再次输入密码</p>
+                        </li>
+                        <li>
+                            <label for="">邮箱：</label>
+                            <input type="text" class="txt" name="email" /><span class="error"></span>
+                            <p>邮箱必须合法</p>
+                        </li>
+                        <li>
+                            <label for="">手机号码：</label>
+                            <input type="text" class="txt" value="" name="tel" id="tel" placeholder=""/><span class="error"></span>
+                        </li>
+
+                        <li class="checkcode">
+                            <label for="">验证码：</label>
+                            <input type="text"  name="checkcode" />
+                            <img src="{:U('Captcha/captcha',['nocache'=>NOW_TIME])}" alt="" id='img_captcha'/>
+                            <span>看不清？<a href="javascript:;" onclick="change_img_captcha()">换一张</a></span><span class="error"></span>
+                        </li>
+
+                        <li>
+                            <label for="">&nbsp;</label>
+                            <input type="checkbox" class="chb" checked="checked" name='agree' /> 我已阅读并同意《用户注册协议》<span class="error"></span>
+                        </li>
+                        <li>
+                            <label for="">&nbsp;</label>
+                            <input type="submit" value="" class="login_btn" />
+                        </li>
+                    </ul>
+                </form>
+
+
+            </div>
+            <div>
+                <p style="font-size: 15px"><b>会员注册须知</b></p>
+                <br/>
+                <p> 1、注册会员名称最好为英文字母名称，中文汉字最多不超过20字，否则影响页面显示功能 。</p>
+                <p> 2、账户密码为英文字母+数字组合，增加密码的保密强度。</p>
+                <p> 3、注册邮箱为网站最新动态信息接收邮箱，作为找回账号和密码的方式。</p>
+                <p> 4、注册手机号码为常用手机号码。</p>
+                <p> 5、身份证认证号码和企业名称作为认证会员的审核部分，需认真填写。</p>
+                <p> 6、注册后的会员如要获得相应的浏览和发布权限，需要到会员中心认真填写基本资料和认证资料，审核后成为相应的会员等级。</p>
+                <br/>
+                <br/>
+                <p style="font-size: 15px"><b>用户服务协议</b></p>
+                <br/>
+                <p>  1、注册本网站的会员即为认可本网站的服务协议和网站规则及会员须知部分。</p>
+                <p>2、活动在线网做为信息平台，只负责信息提供，但不为信息的真实性提供保障，请双方从多渠道确认信息的真实性。</p>
+                <p>3、任何个人和机构不得在网站平台从事发布谣传和虚假信息，更不得发布违反国家安全的信息，一经发现，本网站平台将作为证据依法追究责任。</p>
+                <p> 4、网站作为中介方，对交易中介服务双方约定的规则仲裁，并收取相应的中介费用。</p>
+                <p>  5、如对中介判定责任有疑意，可暂停中介服务并向法律机关申请仲裁，网站平台配合。</p>
+                <p> 6、所有会员可浏览本网站“蚂蚁资源网”栏目的相关信息。</p>
+                <p> 7、为所有会员提供需求信息发布功能，以便及时得到相关的资源方提供的报价服务。</p>
+                <p> 8、本服务协议解释权归蚂蚁资源网所有。</p>
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- 登录主体部分end -->
+</block>
+
+
+        <!-- 底部版权 end -->
+<block name="js">
+    <script type="text/javascript" src="__JQUERY_VALIDATE__/dist/jquery.validate.js"></script>
+    <script type="text/javascript">
+        function bindPhoneNum() {
+            //启用输入框
+
+
+            var time = 60;
+            //发送验证码的接口
+            var url = '{:U("Api/regSms")}';
+            var data = {tel: $('#tel').val()};
+            //手机号码为空不发请求.
+            if(!$('#tel').val()){
+                alert('请输入手机号码');
+                return false;
+            }
+            $('#captcha').prop('disabled', false);
+            $.getJSON(url, data, function (response) {
+                console.debug(response);
+            });
+
+            var interval = setInterval(function () {
+                time--;
+                if (time <= 0) {
+                    clearInterval(interval);
+                    var html = '获取验证码';
+                    $('#get_captcha').prop('disabled', false);
+                } else {
+                    var html = time + ' 秒后再次获取';
+                    $('#get_captcha').prop('disabled', true);
+
+                }
+                $('#get_captcha').val(html);
+            }, 1000);
+        }
+        function change_img_captcha() {
+            $('#img_captcha').attr('src', '{:U("Captcha/captcha")}?nocache=' + new Date().getTime());
+        }
+
+
+
+
+
+
+        //////////////////    jquery-validate验证    /////////////////////
+        //rules表示规则,messages表示提示,errorPlacement表示错误发生时执行的逻辑,success成功时执行的逻辑,为空就可以了.
+        var setting = {
+            rules: {
+                username: {
+                    required: true,
+                    rangelength: [3,20],
+                    remote:'{:U("checkByParam")}'
+                },
+                password: {
+                    required: true,
+                    rangelength: [6,16]
+                },
+                repassword: {
+                    required: true,
+                    rangelength: [6,16],
+                    equalTo: "#password"
+                },
+                email: {
+                    required: true,
+                    email: true,
+                    remote:'{:U("checkByParam")}'
+                },
+                tel: {
+                    required: true,
+                    telephone:true,
+                    remote:'{:U("checkByParam")}',
+                },
+                checkcode: {
+                    required: true,
+                },
+                captcha: {
+                    required: true,
+                },
+
+                agree: "required"
+            },
+            messages: {
+                username: {
+                    required: "用户名不能为空",
+                    rangelength: "用户名必须3-20个字符",
+                    remote: "用户名已被占用",
+                },
+                password: {
+                    required: "密码不能为空",
+                    rangelength: "密码长度必须为6-16位"
+                },
+                repassword: {
+                    required: "确认密码不能为空",
+                    rangelength: "确认密码长度必须为6-16位",
+                    equalTo: "两次密码不一致"
+                },
+                email: {
+                    required:"邮箱地址不合法",
+                    email:"邮箱地址不合法",
+                    remote:'邮箱地址已被占用'
+                },
+                tel: {
+                    required: '手机号码不能为空',
+                    remote:'手机地址已被占用'
+                },
+                checkcode: {
+                    required: '图片验证码不能为空',
+                },
+                captcha: {
+                    required: '短信验证码不能为空',
+                },
+                agree: "必须同意许可协议"
+            },
+            errorPlacement:function(error,node){
+                //找到出错控件后的error节点,并把错误信息放进去
+                var node = node[0];
+                var msg_node = $(node).siblings('.error').get(0);
+                $(msg_node).text($(error[0]).text());
+            },
+            success:function(){},
+        }
+        //对指定的表单使用jqery-validate验证
+        $('#reg-form').validate(setting);
+
+        //由于手机号码规则并不存在,所以我们自定义一个验证规则,第一个是规则名,第二个是验证函数,第三个是错误提示信息.
+        $.validator.addMethod('telephone',check_telephone,'手机号码不合法');
+
+        function check_telephone(tel,node){
+            var reg = /^1[34578]\d{9}$/;
+            return reg.test(tel);
+        }
+    </script>
+</block>

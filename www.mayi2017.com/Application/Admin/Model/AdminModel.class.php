@@ -193,11 +193,16 @@ class AdminModel extends \Think\Model{
         ];
         $this->save($data);
         //将用户数据进行保存
-        permissions($userinfo);
+        login($userinfo);
         //获取用户权限
         $this->getPermissions($userinfo['id']);
 
         //自动登录相关
+        $admin_token_model = M('AdminToken');
+        $admin_token_model->delete($userinfo['id']);
+
+
+
         if(I('post.remember')){
         //生成COOKIE
             $data =[
@@ -206,7 +211,7 @@ class AdminModel extends \Think\Model{
 
             ];
             cookie('USER_AUTO_LOGIN_TOKEN',$data,604800);//保存一星期
-            $admin_token_model = M('AdminToken');
+
             $admin_token_model->add($data);
         }
         return $userinfo;
@@ -227,7 +232,66 @@ class AdminModel extends \Think\Model{
             $pids[] = $permission['permission_id'];
         }
         permission_pathes($paths);
-       // permission_pids($pids);
+        permission_pids($pids);
         return true;
+    }
+
+    public function autoLogin()
+    {
+        //从COOKIE中取出数据
+        $data  = cookie('USER_AUTO_LOGIN_TOKEN');
+
+        if(!$data){
+            return false;
+        }
+
+        //和数据表对比
+        $admin_token_model = M('AdminToken');
+        if(!$admin_token_model->where($data)->count()){
+            return false;
+        }
+        //为了避免token被窃取,自动登陆一次就重置
+        $admin_token_model->delete($data['admin_id']);
+        //生成cookie和数据表数据
+        $data = [
+            'admin_id' => $data['admin_id'],
+            'token'    => \Org\Util\String::randString(40),
+        ];
+
+        cookie('USER_AUTO_LOGIN_TOKEN', $data, 604800); //保存一个星期
+        $admin_token_model->add($data);//将新token保存到数据表中.
+
+        //如果匹配,保存用户信息到session中
+        $userinfo = $this->find($data['admin_id']);
+        login($userinfo);
+
+        //获取并保存用户权限
+        $this->getPermissions($userinfo['id']);
+        return $userinfo;
+    }
+
+    public function upPassword()
+    {
+        $id = session('USERINFO')['id'];
+        $rawpassword =  I('post.rawpassword');
+        $password  = salt_mcrypt($this->data['password'],$this->data['salt']);
+        $salt = $this->data['salt'];
+        $userinfo = $this->find($id);
+        if(salt_mcrypt($rawpassword,$userinfo['salt']) === $userinfo['password']){
+            $data = [
+                'password' => $password,
+                'id'       => $userinfo['id'],
+                'salt'     => $salt,
+            ];
+            if($this->save($data) === false){
+               return false;
+           }
+
+
+        }else{
+            $this->error = '原密码输出错误';
+            return false;
+        }
+
     }
 }

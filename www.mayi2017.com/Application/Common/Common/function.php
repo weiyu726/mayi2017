@@ -62,7 +62,7 @@ function salt_mcrypt($password,$salt){
  *
  * @param  mixed $data
  */
-function permissions($data = null){
+function login($data = null){
     if(is_null($data)){
         return session('USERINFO');
     }else{
@@ -71,18 +71,34 @@ function permissions($data = null){
 }
 
 /**
- * 获取和设置用户权限SESSINO
+ * 获取和设置用户权限路径 SESSINO
  *
  * @param  mixed $data
  */
 function permission_pathes($data = null){
     if(is_null($data)){
         $pathes =  session('PERMISSIONS_PATHES');
-        if(!in_array($pathes)){
+        if(!is_array($pathes)){
             $pathes = [];
         }
         return $pathes;
     }else{
         session('PERMISSIONS_PATHES',$data);
+    }
+}
+/**
+ * 获取和设置用户权限 ID SESSINO
+ *
+ * @param  mixed $data
+ */
+function permission_pids($data = null){
+    if(is_null($data)){
+        $pids =  session('PERMISSION_PIDS');
+        if(!is_array($pids)){
+            $pids = [];
+        }
+        return $pids;
+    }else{
+        session('PERMISSION_PIDS',$data);
     }
 }

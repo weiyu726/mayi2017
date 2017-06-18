@@ -42,12 +42,13 @@ return array(
     'UPLOAD_SETTING' => require 'upload.php',
 
     //RBAC访问忽略列表
-    'ACCESS_STTING' =>[//所有用户可见
+    'ACCESS_IGNORE' =>[//所有用户可见
         'IGNORE'=>[
             'Admin/Admin/login',
-            'Admin/Captcha/captcha'
+            'Admin/Captcha/captcha',
+            'Admin/Admin/loginOut',
         ],
-        'USER_IGNOER'=>[//登录用户可见
+        'USER_IGNORE'=>[//登录用户可见
             'Admin/Index/top',
             'Admin/Index/index',
             'Admin/Index/menu',

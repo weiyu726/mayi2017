@@ -201,7 +201,7 @@ CREATE TABLE goods_intro (
   token CHAR(40)
 ) CHARSET utf8 ;
 
-#根据上图我们需要创建一个令牌表,用于保存用户的令牌信息
+#创建一个令牌表,用于保存用户的令牌信息
 CREATE TABLE admin_token (
   admin_id INT UNSIGNED PRIMARY KEY,
   token CHAR(40)
